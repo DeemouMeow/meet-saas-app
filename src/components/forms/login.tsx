@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { loginSchema, type LoginSchemaType } from "@/lib/schemas/auth";
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/forms/common/form-input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import ErrorAlert from "@/components/auth/error-alert";
+import { loginSchema, type LoginSchemaType } from "@/lib/schemas/auth";
 import { authClient } from "@/lib/auth-client";
+import { APP_ROUTES } from "@/lib/routes";
 
 export default function LoginForm() {
     const [error, setError] = useState<string>("");
@@ -30,7 +31,8 @@ export default function LoginForm() {
         authClient.signIn.email(
         {
             email: values.email,
-            password: values.password
+            password: values.password,
+            callbackURL: APP_ROUTES.dashbaord
         },
         {
             onError: ({ error }) => {

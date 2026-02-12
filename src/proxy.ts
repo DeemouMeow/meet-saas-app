@@ -2,10 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from "@/lib/auth"; 
-
-const AUTH_ROUTES = ["/auth/login", "/auth/register"];
-const PRIVATE_ROUTES = ["/"];
-const PUBLIC_ROUTES = ["/about"];
+import { APP_ROUTES, AUTH_ROUTES, PRIVATE_ROUTES } from '@/lib/routes';
 
 export default async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -13,17 +10,18 @@ export default async function proxy(request: NextRequest) {
     const isAuthenticated = !!session;
 
     const isAuthRoute = AUTH_ROUTES.includes(pathname);
-    const isPublicRoute = PUBLIC_ROUTES.some(route => pathname.startsWith(route));
+    const isPriviteRoute = PRIVATE_ROUTES.some(route => pathname.startsWith(route));
 
     if (isAuthenticated && isAuthRoute) {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL(APP_ROUTES.dashbaord, request.url));
     }
 
     if (!isAuthenticated) {
-        if (isPublicRoute || isAuthRoute) {
+        if (isAuthRoute && !isPriviteRoute) {
             return NextResponse.next();
         }
-        return NextResponse.redirect(new URL("/auth/login", request.url));
+
+        return NextResponse.redirect(new URL(APP_ROUTES.login, request.url));
     }
 
     return NextResponse.next();

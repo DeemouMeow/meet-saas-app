@@ -8,10 +8,11 @@ import {
 
 } from "@/components/ui/sidebar";
 
-import DashboardSidebarSection from "@/components/dashboard/sidebar-section";
-import SidebarSeparator from "@/components/dashboard/sidebar-separator";
 import Link from "next/link";
 
+import DashboardSidebarSection from "@/components/dashboard/sidebar/section";
+import SidebarSeparator from "@/components/dashboard/sidebar/separator";
+import DashboardSidebarFooter from "@/components/dashboard/sidebar/footer";
 
 export default function DashboardSidebar() {
     return (
@@ -34,6 +35,8 @@ export default function DashboardSidebar() {
                 <SidebarSeparator/>
                 <DashboardSidebarSection items={DASHBOARD_SECTIONS[1]}/>
             </SidebarContent>
+            
+            <DashboardSidebarFooter/>
         </Sidebar>
     );
 };

@@ -1,13 +1,13 @@
 "use client";
 
+import { memo } from "react";
 import { 
     SidebarGroup, 
     SidebarGroupContent, 
     SidebarMenu 
 } from "@/components/ui/sidebar";
-import SidebarSectionItemWrapper from "@/components/dashboard/sidebar-section-item";
+import SidebarSectionItemWrapper from "@/components/dashboard/sidebar/section-item-wrapper";
 import { Dashboard } from "@/types";
-import { memo } from "react";
 
 interface SidebarSectionProps {
     items: Dashboard.Section;

@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { registerSchema, type RegisterSchemaType } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/forms/common/form-input";
 import { Button } from "@/components/ui/button";
 import ErrorAlert from "@/components/auth/error-alert";
+import { registerSchema, type RegisterSchemaType } from "@/lib/schemas/auth";
 import { authClient } from "@/lib/auth-client";
+import { APP_ROUTES } from "@/lib/routes";
 
 export default function RegisterForm() {
     const [error, setError] = useState<string>("");
@@ -33,6 +34,7 @@ export default function RegisterForm() {
             name: values.firstName,
             email: values.email,
             password: values.password,
+            callbackURL: APP_ROUTES.dashbaord
         },
         {
             onError: ({ error }) => {

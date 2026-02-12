@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
+import { APP_ROUTES } from "@/lib/routes";
 
 type SocialProvider = "google" | "github";
 
 const socialLogin = (provider: SocialProvider) => {
     return function () {
         authClient.signIn.social({
-            provider
+            provider,
+            callbackURL: APP_ROUTES.dashbaord
         });  
     }
 };

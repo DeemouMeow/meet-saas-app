@@ -2,7 +2,7 @@
 
 import { Dashboard  } from "@/types"
 import { usePathname } from "next/navigation";
-import SidebarItemView from "./sidebar-item-view";
+import SidebarItemView from "@/components/dashboard/sidebar/section-item-view";
 
 interface SidebarSectionItemProps {
     item: Dashboard.SidebarSectionItem;
