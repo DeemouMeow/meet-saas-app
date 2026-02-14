@@ -1,6 +1,5 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import HomeView from "@/components/views/home-view";
 import { auth } from "@/lib/auth";
 import { APP_ROUTES } from "@/lib/routes";
 
@@ -13,7 +12,4 @@ export default async function Home() {
     redirect(APP_ROUTES.login);
   else
     redirect(APP_ROUTES.dashbaord);
-
-  return <HomeView/>;
-    
 }
