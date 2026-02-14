@@ -4,7 +4,11 @@ import { PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import CommandButton from "@/components/dashboard/navbar/command-button";
+import dynamic from "next/dynamic";
+
+const CommandButton = dynamic(() => import("@/components/dashboard/navbar/command-button"), {
+    ssr: false
+});
 
 export default function DashboardNavbar() {
     const { isMobile, toggleSidebar, state } = useSidebar();

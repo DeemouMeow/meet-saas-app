@@ -21,4 +21,4 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </main>
     </SidebarProvider>
   );
-}
+};

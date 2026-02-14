@@ -1,10 +1,17 @@
 "use client";
 
-import AvatarPlaceholder from "@/components/avatar-placeholder";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { type User } from "@/types";
+import { User } from "better-auth";
 import { CreditCardIcon, LogOutIcon } from "lucide-react";
+
+import AvatarPlaceholder from "@/components/common/avatar-placeholder";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { 
+    DropdownMenu, 
+    DropdownMenuContent, 
+    DropdownMenuItem, 
+    DropdownMenuSeparator, 
+    DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 interface UserButtonDropdownProps {
     user: User,
