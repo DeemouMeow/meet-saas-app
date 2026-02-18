@@ -30,8 +30,7 @@ const FormInput = <T extends FieldValues>({
     labelRightElement,
     className
 }: FormInputProps<T>) => {
-    const inputClassName = cn("border-zinc-800 bg-zinc-950 text-white focus-visible:ring-green-500", className);
-
+    const inputClassName = cn("border-zinc-800 bg-zinc-950 text-white focus-visible:ring-green-500", "selection:bg-green-500 selection:text-black", className);
 
     return (
         <FormField
