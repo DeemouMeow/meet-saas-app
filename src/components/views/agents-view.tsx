@@ -2,7 +2,8 @@
 
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import LoadingState from "../common/loading-state";
+
+import LoadingState from "@/components/common/loading-state";
 
 export function AgentsViewLoading() {
     return <LoadingState
