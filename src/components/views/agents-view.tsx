@@ -4,6 +4,9 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import LoadingState from "@/components/common/loading-state";
+import { DataTable } from "@/components/common/data-table/data-table";
+import { agentColumns } from "@/components/common/data-table/columns";
+import EmptyState from "@/components/common/empty-state";
 
 export function AgentsViewLoading() {
     return <LoadingState
@@ -17,8 +20,9 @@ export default function AgentsView() {
     const { data} = useSuspenseQuery(trpc.agents.getMany.queryOptions());
 
     return (
-        <div>
-            {JSON.stringify(data, null, 2)}
+        <div className="flex flex-col flex-1 gap-y-4 pb-4 px-4 md-px-8">
+            <DataTable data={data} columns={agentColumns}/>
+            {!data.length && <EmptyState title="There are no agents here" description="Try to create first one by clicking 'Create' button"/>}
         </div>
     );
 };
