@@ -20,7 +20,7 @@ import { APP_ROUTES } from "@/lib/routes";
 interface AgentsFormProps {
     onSuccess?: () => void;
     onCancel?: () => void;
-    initialValues?: AgentProcedures.GetOne;
+    initialValues?: AgentProcedures.AgentGetOneOutput;
 };
 
 export default function AgentsForm({ onSuccess, onCancel, initialValues }: AgentsFormProps) {

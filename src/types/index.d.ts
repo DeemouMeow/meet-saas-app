@@ -13,7 +13,7 @@ export namespace Dashboard {
 };
 
 export namespace AgentProcedures {
-    type GetOne = inferRouterOutputs<AppRouter>["agents"]["getOne"];
+    type AgentGetOneOutput = inferRouterOutputs<AppRouter>["agents"]["getOne"];
 };
 
 export type ServerActionResult<T = void> = {

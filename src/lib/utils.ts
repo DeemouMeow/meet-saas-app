@@ -21,3 +21,14 @@ export const error = <T = void>(message: string, data?: T) : ServerActionResult<
     data
   };
 };
+
+export const debounce = <A extends unknown[], R extends void>(func: (...args: A) => R, delay: number) => {
+  let timeoutId: NodeJS.Timeout;
+
+  return (...args: A) => {
+    if (timeoutId)
+      clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};

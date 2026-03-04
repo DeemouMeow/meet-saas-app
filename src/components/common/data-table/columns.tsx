@@ -6,7 +6,7 @@ import AvatarPlaceholder from "@/components/common/avatar-placeholder";
 import { CornerDownRightIcon, VideoIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-export const agentColumns: ColumnDef<AgentProcedures.GetOne>[] = [
+export const agentColumns: ColumnDef<AgentProcedures.AgentGetOneOutput>[] = [
   {
     accessorKey: "name",
     header: "Name",
