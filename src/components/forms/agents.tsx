@@ -80,7 +80,7 @@ export default function AgentsForm({ onSuccess, onCancel, initialValues }: Agent
                 <div className="flex flex-col items-center w-full gap-6">
                     <AvatarPlaceholder 
                         seed={form.watch("name")}
-                        classname="h-20 w-20 border"
+                        className="h-20 w-20 border"
                     />
 
                     <div className="w-full space-y-4">

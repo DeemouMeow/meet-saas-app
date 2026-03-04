@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { agents } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { agentsCreateSchema, agentsGetManySchema, agentsGetOneSchema } from "@/modules/agents/schemas";
+import { TRPCError } from "@trpc/server";
 
 export const agentsRouter = createTRPCRouter({
     getMany: protectedProcedure
@@ -40,12 +41,23 @@ export const agentsRouter = createTRPCRouter({
         }),
     getOne: protectedProcedure
         .input(agentsGetOneSchema)
-        .query(async ({ input }) => {
+        .query(async ({ input, ctx }) => {
             const [candidate] = await db
                 .select()
                 .from(agents)
-                .where(eq(agents.id, input.id));
+                .where(
+                    and(
+                        eq(agents.id, input.id), 
+                        eq(agents.userId, ctx.auth.user.id)
+                    )
+                );
             
+            if (!candidate)
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "No agent found"
+                })
+
             return candidate;
         }),
     create: protectedProcedure

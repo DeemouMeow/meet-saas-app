@@ -20,8 +20,9 @@ import {
 } from "@/components/ui/table";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  rowClickCallback?: (row?: TData) => void;
 };
 
 interface DataTableRowsProps<TData> {
@@ -36,8 +37,10 @@ interface DataTableRowProps<TData> {
 const DataTableRow = memo(function<TData>({ row }: DataTableRowProps<TData>) {
     return (
         <TableRow
-            key={row.id}
-            data-state={row.getIsSelected() && "selected"}
+          key={row.id}
+          data-state={row.getIsSelected() && "selected"}
+          data-id={row.id}
+          className="cursor-pointer"
         >
             {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
@@ -59,14 +62,15 @@ function DataTableRows<TData>({ rows, columsSpan }: DataTableRowsProps<TData>) {
         );
     }
 
-    return (
-        rows.map((row) => <DataTableRow row={row} key={row.id}/>)
+    return ( 
+      rows.map((row) => <DataTableRow row={row} key={row.id}/>)
     );
 };
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  rowClickCallback
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -74,29 +78,33 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const callRowClickCallback = (rowId: string | null | undefined) => {
+    if (rowId) {
+      try {
+        const row = table.getRow(rowId);
+        const original = row.original;
+
+        rowClickCallback?.(original);
+      } catch {
+        rowClickCallback?.(undefined);
+      }
+    }
+  }; 
+
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-            <DataTableRows rows={table.getRowModel().rows} columsSpan={columns.length}/>
+        <TableBody onClick={(event) => {
+            const target = (event.target as HTMLElement).closest("tr");
+            const id = target?.getAttribute("data-id");
+
+            callRowClickCallback(id);
+          }
+        }>
+            <DataTableRows 
+              rows={table.getRowModel().rows} 
+              columsSpan={columns.length}
+            />
         </TableBody>
       </Table>
     </div>

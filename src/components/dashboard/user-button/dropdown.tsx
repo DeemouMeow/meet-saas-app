@@ -29,7 +29,7 @@ export default function UserButtonDropdown({ user, logout }: UserButtonDropdownP
                         <AvatarImage src={user.image}/>
                     </Avatar>
                 ) 
-                : <AvatarPlaceholder seed={user.name || ""} classname="size-9"/> 
+                : <AvatarPlaceholder seed={user.name || ""} className="size-9"/> 
                 }
                 <div className="flex flex-col gap-0.5 text-left overflow-hidden flex-1 min-w-0">
                     <p className="text-sm truncate w-full">{user.name}</p>
