@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import CreateAgentDialog from "./create-agent-dialog";
+import CreateAgentDialog from "@//components/dashboard/agents/create-agent-dialog";
+import SearchAgentsFilter from "@/components/dashboard/agents/search-filter";
 
 export default function AgentsListHeader() {
     const [open, setIsOpen] = useState<boolean>(false);
@@ -19,6 +20,7 @@ export default function AgentsListHeader() {
                         Create
                     </Button>
                 </div>
+                <SearchAgentsFilter/>
             </div>
         </>
     );
