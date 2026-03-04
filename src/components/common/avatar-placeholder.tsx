@@ -6,16 +6,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface AvatarPlaceholderProps {
     seed: string;
-    classname?: string;
+    className?: string;
 };
 
-export default function AvatarPlaceholder({ seed, classname } : AvatarPlaceholderProps) {
+export default function AvatarPlaceholder({ seed, className } : AvatarPlaceholderProps) {
     const avatar = createAvatar(botttsNeutral, {
         seed
     });
 
     return (
-        <Avatar className={cn(classname)}>
+        <Avatar className={cn(className)}>
             <AvatarImage src={avatar.toDataUri()} alt="Avatar"/>
             <AvatarFallback>
                 {seed.charAt(0).toUpperCase()}

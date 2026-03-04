@@ -6,7 +6,9 @@ import AvatarPlaceholder from "@/components/common/avatar-placeholder";
 import { CornerDownRightIcon, VideoIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-export const agentColumns: ColumnDef<AgentProcedures.AgentGetOneOutput>[] = [
+export type AgentRowType = AgentProcedures.AgentGetOneOutput;
+
+export const agentColumns: ColumnDef<AgentRowType>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -14,7 +16,7 @@ export const agentColumns: ColumnDef<AgentProcedures.AgentGetOneOutput>[] = [
       return (
         <div className="flex flex-col gap-y-1">
           <div className="flex items-center gap-x-3">
-            <AvatarPlaceholder seed={row.original.name} classname="size-6"/>
+            <AvatarPlaceholder seed={row.original.name} className="size-6"/>
             <span className="font-semibold capitalize">{row.original.name}</span>
           </div>
           <div className="flex items-center gap-x-1">
