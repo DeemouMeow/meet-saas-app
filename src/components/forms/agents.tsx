@@ -1,56 +1,30 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { APP_ROUTES } from "@/lib/routes";
+import useAgentMutations from "@/hooks/use-agents-mutation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AgentProcedures } from "@/types";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { agentsCreateSchema, AgentsCreateSchemaType } from "@/modules/agents/schemas";
 import { 
-    Form 
-} from "@/components/ui/form";
+    agentsCreateSchema, 
+    AgentsCreateSchemaType, 
+    AgentsUpdateSchemaType } from "@/modules/agents/schemas";
+import { Form } from "@/components/ui/form";
 import FormInput from "@/components/forms/common/form-input";
 import FormTextarea from "@/components/forms/common/form-textarea";
 import { Button } from "@/components/ui/button";
 import AvatarPlaceholder from "@/components/common/avatar-placeholder";
-import { toast } from "sonner";
-import { APP_ROUTES } from "@/lib/routes";
 
 interface AgentsFormProps {
-    onSuccess?: () => void;
+    onConfirm?: () => void;
     onCancel?: () => void;
-    initialValues?: AgentProcedures.AgentGetOneOutput;
+    initialValues?: AgentsUpdateSchemaType;
 };
 
-export default function AgentsForm({ onSuccess, onCancel, initialValues }: AgentsFormProps) {
-    const trpc = useTRPC();
+export default function AgentsForm({ onConfirm, onCancel, initialValues }: AgentsFormProps) {
     const router = useRouter();
-    const queryClient = useQueryClient();
-
-    const createAgent = useMutation(
-        trpc.agents.create.mutationOptions({
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(
-                    trpc.agents.getMany.queryOptions()
-                );
-
-                if (initialValues?.id) {
-                    await queryClient.invalidateQueries(
-                        trpc.agents.getOne.queryOptions({ id: initialValues.id })
-                    );
-                }
-
-                onSuccess?.();
-            },
-            onError: (error) => {
-                toast.error(error.message);
-
-                if (error.data?.code === "FORBIDDEN")
-                    router.push(APP_ROUTES.upgrade);
-            },
-        })
-    );
+    const { create, update, isPending } = useAgentMutations(initialValues?.id);
 
     const form = useForm<AgentsCreateSchemaType>({
         resolver: zodResolver(agentsCreateSchema),
@@ -61,14 +35,44 @@ export default function AgentsForm({ onSuccess, onCancel, initialValues }: Agent
     });
 
     const isEdit = !!initialValues?.id;
-    const isPending = createAgent.isPending;
 
-    const onSubmit = (values: AgentsCreateSchemaType) => {
+    const onSubmit = async (values: AgentsCreateSchemaType) => {
         if (isEdit) {
-            console.log("TODO: Edit");
+            await update.mutateAsync(
+                {
+                id: initialValues.id,
+                instructions: values.instructions,
+                name: values.name
+                }, 
+                {
+                    onSuccess: () => {
+                        console.log("Successfully updated agent", values.name);
+                        toast.success(`Agent '${values.name}' is successfully updated`);
+                    },
+                    onError: () => {
+                        toast.error(`Unable to update '${values.name}' agent`);
+                    }
+                }
+            );
         } else {
-            createAgent.mutate(values);
+            await create.mutateAsync(
+                values, 
+                {
+                    onSuccess: () => {
+                        toast.success(`Mew agent is now available for meetings!`);
+                    },
+                    onError: (error) => {
+                        if (error.data?.code === "FORBIDDEN") {
+                            router.push(APP_ROUTES.upgrade);
+                        }
+
+                        toast.error(`Unable to create new agent! Upgrade your plan first!`);
+                    }
+                }
+            );
         }
+
+        onConfirm?.();
     };
 
     return (

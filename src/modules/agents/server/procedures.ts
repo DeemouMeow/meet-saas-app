@@ -1,9 +1,41 @@
-import { and, count, desc, eq, ilike } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
+import { 
+    and,
+    count,
+    desc, 
+    eq, 
+    ilike 
+} from "drizzle-orm";
 import { db } from "@/db";
 import { agents } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { agentsCreateSchema, agentsGetManySchema, agentsGetOneSchema } from "@/modules/agents/schemas";
-import { TRPCError } from "@trpc/server";
+import { 
+    createTRPCRouter, 
+    protectedProcedure 
+} from "@/trpc/init";
+import { 
+    agentsCreateSchema, 
+    agentsGetManySchema, 
+    agentsGetOneSchema, 
+    agentsDeleteSchema, 
+    agentsUpdateSchema
+} from "@/modules/agents/schemas";
+
+const getAgent = async (agentId: string, userId: string) => {
+    if (!agentId || !userId)
+        return null;
+
+    const [candidate] = await db
+                .select()
+                .from(agents)
+                .where(
+                    and(
+                        eq(agents.id, agentId), 
+                        eq(agents.userId, userId)
+                    )
+                );
+    
+    return candidate;
+};
 
 export const agentsRouter = createTRPCRouter({
     getMany: protectedProcedure
@@ -42,15 +74,7 @@ export const agentsRouter = createTRPCRouter({
     getOne: protectedProcedure
         .input(agentsGetOneSchema)
         .query(async ({ input, ctx }) => {
-            const [candidate] = await db
-                .select()
-                .from(agents)
-                .where(
-                    and(
-                        eq(agents.id, input.id), 
-                        eq(agents.userId, ctx.auth.user.id)
-                    )
-                );
+            const candidate = await getAgent(input.id, ctx.auth.user.id);
             
             if (!candidate)
                 throw new TRPCError({
@@ -78,4 +102,51 @@ export const agentsRouter = createTRPCRouter({
             
             return insertedAgent;
         }),
+    delete: protectedProcedure
+        .input(agentsDeleteSchema)
+        .mutation(async ({ input, ctx }) => {
+            const { id } = input;
+            const { id: userId } = ctx.auth.user; 
+
+            const [deleted] = await db
+                .delete(agents)
+                .where(
+                    and(
+                        eq(agents.id, id),
+                        eq(agents.userId, userId)
+                    )
+                )
+                .returning();
+            
+            return deleted;
+        }),
+    update: protectedProcedure
+        .input(agentsUpdateSchema)
+        .mutation(async ({ input, ctx }) => {
+            const { id, name, instructions } = input;
+            const { id: userId } = ctx.auth.user;
+            
+            const candidate = await getAgent(id, userId);
+            
+            if (!candidate)
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "No agent found"
+                });
+
+            await db
+                .update(agents)
+                .set(
+                    {
+                        instructions,
+                        name
+                    }
+                )
+                .where(
+                    and(
+                        eq(agents.id, id),
+                        eq(agents.userId, userId)
+                    )
+                );
+        })
 });
