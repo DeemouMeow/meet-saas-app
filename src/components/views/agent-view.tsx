@@ -27,6 +27,14 @@ export default function AgentView({ agentId }: AgentViewProps) {
         id: agentId
     }));
 
+    const onAgentRemove = () => {
+
+    };
+
+    const onAgentEdit = () => {
+
+    };
+
     const { name, instructions, id } = data;
 
     return (

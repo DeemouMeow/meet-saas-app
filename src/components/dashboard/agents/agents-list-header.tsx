@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import CreateAgentDialog from "@//components/dashboard/agents/create-agent-dialog";
+import AgentDialog from "@/components/dashboard/agents/agent-dialog";
 import SearchAgentsFilter from "@/components/dashboard/agents/search-filter";
 
 export default function AgentsListHeader() {
@@ -11,7 +11,7 @@ export default function AgentsListHeader() {
 
     return (
         <>
-            <CreateAgentDialog open={open} onOpenChange={setIsOpen}/>
+            <AgentDialog open={open} onOpenChange={setIsOpen}/>
             <div className="flex flex-col gap-y-4 px-4 py-4 md:px-8">
                 <div className="flex items-center justify-between">
                     <h5 className="font-bold text-xl">My Agents</h5>

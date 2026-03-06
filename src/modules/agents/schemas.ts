@@ -5,11 +5,7 @@ const { DEFAULT_PAGE_SIZE, DEFAUTL_PAGE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } = GET_MA
 
 const agentsCreateSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
-    instructions: z.string().min(1, { message: "Instructions is required" }),
-});
-
-const agentsGetOneSchema = z.object({
-    id: z.string()
+    instructions: z.string().min(10, { message: "Instructions is required. At least 10 characters!" }),
 });
 
 const agentsGetManySchema = z.object({
@@ -21,11 +17,27 @@ const agentsGetManySchema = z.object({
     pageSize: DEFAULT_PAGE_SIZE
 });
 
+const agentsGetOneSchema = z.object({
+    id: z.string()
+});
+
+const agentsUpdateSchema = agentsCreateSchema.extend({
+    id: z.string()
+});
+
+const agentsDeleteSchema = z.object({
+    id: z.string()
+});
+
 type AgentsCreateSchemaType = z.infer<typeof agentsCreateSchema>;
+type AgentsUpdateSchemaType = z.infer<typeof agentsUpdateSchema>;
 
 export {
     agentsCreateSchema,
     agentsGetOneSchema,
     agentsGetManySchema,
-    type AgentsCreateSchemaType
-}
+    agentsUpdateSchema,
+    agentsDeleteSchema,
+    type AgentsCreateSchemaType,
+    type AgentsUpdateSchemaType
+};
